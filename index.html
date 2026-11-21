@@ -66,7 +66,7 @@
   .frame.on .bg{opacity:1}
   .frame.on i{transform:none}
   .frame.on .tags span{clip-path:inset(0 0 0 0)}
-  .slotlabel{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;transition:opacity .3s}
+  .slotlabel{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;transition:opacity .3s;pointer-events:none}
   .slotlabel b{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:28px;letter-spacing:-.01em;text-transform:none;display:block;margin:6px 0 4px}
 
   /* Last panel: contact */
@@ -125,7 +125,7 @@ pencil:`<img src="pencil.png" alt="Pencil">`
 };
 // Each item = one subject. Edit name / subject / link here. a = [x% inside the bag, tilt]
 const ITEMS = [
- {k:'pendrive', item:'Pendrive',    name:'Syntra',             module:'Retail Technology',          link:'syntra/', h:.42, a:[60,-6]},
+ {k:'pendrive', item:'Pendrive',    name:'Syntra',             module:'Retail Technology',          link:'work/syntra/', h:.42, a:[60,-6]},
  {k:'notebook', item:'Notebook',    name:'No-Broker',          module:'Design Management',          link:'nobroker/', h:.78, a:[40,-4]},
  {k:'frame',    item:'Glasses',     name:'SLA III',            module:'Visual Narratives',          link:'sla3/', h:.4,  a:[64,4]},
  {k:'pen',      item:'Pilot V pen', name:'Ather Energy',       module:'Retail Systems & Processes', link:'ather/', h:.78, a:[34,-10]},
@@ -135,7 +135,7 @@ const ITEMS = [
 ];
 const ASP={pendrive:886/566,notebook:497/569,frame:996/359,pen:900/851,pencil:900/754,charger:847/900,lipbalm:193/900};
 const REAL={pendrive:[6,.79,.5,-8],notebook:[19,.29,.575,-8],frame:[14.5,.62,.46,4],pen:[14,.69,.635,0],pencil:[17.5,.5,.625,6],charger:[11,.46,.5,-6],lipbalm:[7,.8,.62,-4]};
-const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
+const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','work/syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
 $('index').innerHTML=IDX.map(([a,b,l],i)=>`<a ${l?`href="${l}"${/^http/.test(l)?' target="_blank"':''}`:''} class="${i?'':'main'}"><dt>${a}</dt><dd>${b.toUpperCase()}</dd></a>`).join('');
 
@@ -252,8 +252,10 @@ function swap(key){
 nameEl.addEventListener('mouseenter',()=>swap('en'));
 nameEl.addEventListener('mouseleave',()=>swap('name'));
 let tTimer;nameEl.addEventListener('touchstart',()=>{clearTimeout(tTimer);swap('en');tTimer=setTimeout(()=>swap('name'),2600)},{passive:true});
-fit();nameEl.style.height=nameEl.offsetHeight+'px';
-addEventListener('resize',fit);
+function lockName(){nameEl.style.height='';fit();nameEl.style.height=nameEl.offsetHeight+'px'}
+lockName();
+document.fonts&&document.fonts.ready.then(()=>{lockName();layout()});
+addEventListener('resize',()=>{lockName();layout()});
 addEventListener('resize',layout);
 layout();tick();
 document.querySelectorAll('.item img').forEach(im=>im.complete||im.addEventListener('load',layout));
