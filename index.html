@@ -45,8 +45,8 @@
   .item:hover img{filter:drop-shadow(0 18px 28px rgba(20,40,80,.3))}
   .item.soon{cursor:default}
   /* x-ray look by default, real photo when highlighted */
-  .item img{filter:grayscale(1) invert(1) sepia(1) saturate(4) hue-rotate(var(--hue,190deg)) brightness(1.04) contrast(.9);opacity:.9;transition:filter .45s ease,opacity .45s ease}
-  .item.on img,.item.home img{filter:none;opacity:1}
+  .item img{transition:filter .45s ease,opacity .45s ease}
+  .item.on img{filter:grayscale(1) invert(1) sepia(1) saturate(4) hue-rotate(var(--hue,190deg)) brightness(1.04) contrast(.9);opacity:.92}
   .frame{position:absolute;pointer-events:none;z-index:2;transform:translate(-50%,-50%)}
   .frame .bg{position:absolute;inset:0;background:#f5f7fa;opacity:0;transition:opacity .4s ease}
   .frame i{position:absolute;background:#9cc2f0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
@@ -189,7 +189,7 @@ function tick(){
   $('hint').style.opacity=x<20?1:0;
   ITEMS.forEach((it,i)=>{const e=els[i];
     // each item slides out of the bag sideways as the row moves
-    const t=ease(Math.min(1,Math.max(0,(x-i*G.slot*.5)/(G.W*.6))));
+    const t=ease(Math.min(1,Math.max(0,(x/(G.W*.5))-i*.06)));
     const px=it.start[0]+(it.end[0]-it.start[0])*t,py=it.start[1]+(it.end[1]-it.start[1])*t-Math.sin(t*Math.PI)*G.H*.1;
     const sc=.38+.62*t,rot=it.a[1]*(1-t)+(i%2?3:-3)*t;
     e.style.transform=`translate(${px}px,${py}px) translate(-50%,-50%) scale(${sc}) rotate(${rot}deg)`;
