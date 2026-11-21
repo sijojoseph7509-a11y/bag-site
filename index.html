@@ -22,6 +22,9 @@
   /* Home panel: name + index (left), bag (right) */
   .home{position:absolute;left:0;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between}
   h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(64px,10.5vw,168px);line-height:.92;letter-spacing:-.035em;padding-bottom:.06em}
+  h1{cursor:default;white-space:nowrap;width:max-content;font-size:calc(var(--fs,1) * clamp(64px,10.5vw,168px))}
+  h1 .ln{display:block}
+  h1{display:flex;flex-direction:column;justify-content:flex-end}
   .index{display:grid;grid-template-columns:auto 1fr;gap:9px 28px;max-width:460px}
   .index a{display:contents}
   .index a:hover dd{color:var(--blue)}
@@ -67,7 +70,7 @@
 
   /* Last panel: contact */
   .contact{position:absolute;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:center;gap:40px}
-  .contact p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(40px,5vw,80px);line-height:.95;letter-spacing:-.02em;text-transform:none}
+  .contact p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(56px,8vw,140px);line-height:.95;letter-spacing:-.02em;text-transform:none}
   .contact .links{display:grid;grid-template-columns:repeat(2,auto);justify-content:start;gap:8px 48px}
   .contact .links a:hover{color:var(--blue)}
 
@@ -90,7 +93,7 @@
 <div id="scroller">
   <div id="track">
     <section class="home" id="home">
-      <h1>SIJO<br>JOSEPH</h1>
+      <h1 id="name" aria-label="Sijo Joseph"><span class="ln">SIJO</span><span class="ln">JOSEPH</span></h1>
       <dl class="index small" id="index"></dl>
     </section>
 
@@ -101,12 +104,7 @@
     <div id="items"></div>
 
     <section class="contact small" id="contact">
-      <p>Open to design projects<br>&amp; internships.</p>
-      <div class="links">
-        <a href="mailto:hello@sijo.work">Email ↗</a><a href="https://sijo.work">Portfolio ↗</a>
-        <a href="#">LinkedIn ↗</a><a href="#">Behance ↗</a>
-      </div>
-      <span class="mut">© 2026 Sijo Joseph</span>
+      <p class="thanks">Thank you.</p>
     </section>
   </div>
 </div>
@@ -132,7 +130,7 @@ const ITEMS = [
  {k:'pen',      item:'Pilot V pen', name:'Ather Energy',       module:'Retail Systems & Processes', link:'ather/', h:.78, a:[34,-10]},
  {k:'pencil',   item:'Pencil',      name:'Intro to Materials', module:'Coming soon',                link:'', h:.72, a:[50,8], soon:1},
  {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Coming soon',                link:'', h:.9,  a:[26,-8], soon:1},
- {k:'lipbalm',  item:'Lip balm',    name:'About me',           module:'Say hello',                  link:'#contact', h:.9, a:[74,-6], about:1},
+ {k:'lipbalm',  item:'Lip balm',    name:'Thank you',          module:'The end',                  link:'#contact', h:.9, a:[74,-6], about:1},
 ];
 const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
@@ -228,6 +226,27 @@ hit.addEventListener('mouseenter',()=>{if(scroller.scrollLeft<40)track.classList
 hit.addEventListener('mouseleave',()=>track.classList.remove('scan'));
 hit.addEventListener('touchstart',()=>track.classList.toggle('scan'),{passive:true});
 scroller.addEventListener('scroll',()=>{if(scroller.scrollLeft>40)track.classList.remove('scan')});
+// Name: letter scramble like chiquach.com. Hover -> Semester 3 Jury; leave -> back to the name.
+const nameEl=$('name'),lines=[...nameEl.querySelectorAll('.ln')];
+const seg=t=>[...t];
+const LAT='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const STATES={name:['SIJO','JOSEPH'],en:['SEMESTER 3','JURY']};
+let run=0;
+function fit(){nameEl.style.setProperty('--fs',1);const max=innerWidth<800?innerWidth*.88:innerWidth*.5;const w=nameEl.scrollWidth;if(w>max)nameEl.style.setProperty('--fs',max/w)}
+function scramble(key,then){
+  const id=++run,target=STATES[key].map(seg),pool=LAT;
+  const from=lines.map(l=>seg(l.textContent));const t0=performance.now();
+  const plan=target.map((tl,li)=>{const n=Math.max(tl.length,from[li].length);return Array.from({length:n},(_,i)=>180+i*55+li*90+Math.random()*120)});
+  (function step(now){if(id!==run)return;let done=true;
+    lines.forEach((l,li)=>{const tl=target[li];l.textContent=plan[li].map((at,i)=>{if(now-t0>=at)return tl[i]||'';done=false;const ch=tl[i];if(ch===' '||ch===undefined&&now-t0>at-60)return ch||'';return pool[Math.random()*pool.length|0]}).join('')});
+    fit();if(!done)requestAnimationFrame(step);else if(then)then(id)})(t0);
+}
+let mlTimer=null;
+nameEl.addEventListener('mouseenter',()=>{clearTimeout(mlTimer);scramble('en')});
+nameEl.addEventListener('mouseleave',()=>{clearTimeout(mlTimer);scramble('name')});
+nameEl.addEventListener('touchstart',()=>{clearTimeout(mlTimer);scramble('en');mlTimer=setTimeout(()=>scramble('name'),2600)},{passive:true});
+nameEl.style.height=nameEl.offsetHeight+'px';
+scramble('name');
 addEventListener('resize',layout);
 layout();tick();
 </script>
