@@ -7,196 +7,182 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#111;--mut:#9a9a9a;--line:#e8e8e6;--blue:#2f5f9e;--pad:clamp(20px,5vw,72px)}
+  :root{--ink:#111;--mut:#9a9a9a;--line:#e8e8e6;--blue:#2f5f9e;--pad:clamp(20px,4vw,64px)}
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{background:#fff;color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{height:100%;overflow:hidden;background:#fff;color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   .small{font-size:11px;letter-spacing:.04em;text-transform:uppercase;line-height:1.6}
   .mut{color:var(--mut)}
 
-  /* Hero: name left, index right, on one 12-col grid */
-  header{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;align-items:end;padding:var(--pad);padding-top:clamp(40px,6vw,88px);min-height:62vh}
-  h1{grid-column:1/8;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(76px,12.5vw,200px);line-height:.92;letter-spacing:-.035em;padding-bottom:.08em}
-  .index{grid-column:9/13;display:grid;grid-template-columns:auto 1fr;gap:10px 28px;padding-bottom:12px}
+  /* One screen. The only scroll is sideways. */
+  #scroller{position:fixed;inset:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior:none}
+  #scroller::-webkit-scrollbar{display:none}
+  #track{position:relative;height:100%}
+
+  /* Home panel: name + index (left), bag (right) */
+  .home{position:absolute;left:0;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between}
+  h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(64px,10.5vw,168px);line-height:.92;letter-spacing:-.035em;padding-bottom:.06em}
+  .index{display:grid;grid-template-columns:auto 1fr;gap:9px 28px;max-width:460px}
   .index a{display:contents}
   .index a:hover dd{color:var(--blue)}
   .index dt{color:var(--mut)}
   .index dd{font-weight:500}
   .index .main dd{color:var(--blue)}
 
-  /* Bag stage */
-  .stage{position:relative}
-  .sticky{position:sticky;top:0;height:100vh;overflow:hidden}
-  .track{position:absolute;left:0;top:0;height:100%;will-change:transform}
   .bagimg{position:absolute;object-fit:contain;pointer-events:none}
   .bagback{z-index:0}.bagfront{z-index:2;clip-path:inset(38.6% 0 0 0)}
   .baghit{position:absolute;z-index:4;cursor:pointer;border-radius:12px}
   .baglabel{position:absolute;z-index:5;transform:translateX(-50%);text-align:center;white-space:nowrap}
   .baghit:hover ~ .baglabel b{color:var(--blue)}
-  .item{position:absolute;z-index:1;left:0;top:0;transform-origin:50% 50%;cursor:pointer;display:block}
+
+  .item{position:absolute;z-index:1;left:0;top:0;display:block;cursor:pointer}
   .item img{height:100%;width:auto;display:block;filter:drop-shadow(0 12px 20px rgba(20,40,80,.16));transition:filter .25s}
   .item:hover img{filter:drop-shadow(0 18px 28px rgba(20,40,80,.3))}
-  .slotlabel{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;transition:opacity .3s;pointer-events:none}
-  .slotlabel b{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:26px;letter-spacing:-.01em;text-transform:none;display:block;margin-bottom:4px}
-  .slotlabel .num{display:block;margin-bottom:8px}
-  .hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);transition:opacity .3s}
+  .item.soon{cursor:default}
+  .slotlabel{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;transition:opacity .3s}
+  .slotlabel b{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:28px;letter-spacing:-.01em;text-transform:none;display:block;margin:6px 0 4px}
 
-  /* Main project */
-  .feature{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;padding:14vh var(--pad);border-top:1px solid var(--line);align-items:center}
-  .feature .art{grid-column:1/7}
-  .feature .art img{width:100%;display:block}
-  .feature .txt{grid-column:8/13;display:flex;flex-direction:column;gap:20px}
-  .feature h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(56px,7vw,112px);line-height:.85;letter-spacing:-.03em}
-  .feature p.lead{font-size:17px;line-height:1.5;max-width:40ch;color:#444}
-  .btn{align-self:flex-start;border:1px solid var(--ink);border-radius:999px;padding:12px 22px}
-  .btn:hover{background:var(--ink);color:#fff}
+  /* Last panel: contact */
+  .contact{position:absolute;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:center;gap:40px}
+  .contact p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(40px,5vw,80px);line-height:.95;letter-spacing:-.02em;text-transform:none}
+  .contact .links{display:grid;grid-template-columns:repeat(2,auto);justify-content:start;gap:8px 48px}
+  .contact .links a:hover{color:var(--blue)}
 
-  /* Modules */
-  .modhead{display:flex;justify-content:space-between;padding:0 var(--pad) 28px;border-bottom:1px solid var(--line)}
-  .grid{display:grid;grid-template-columns:repeat(2,1fr)}
-  .card{display:grid;grid-template-rows:300px auto;gap:28px;padding:56px var(--pad);border-bottom:1px solid var(--line)}
-  .card:nth-child(odd){border-right:1px solid var(--line)}
-  .card .art{display:grid;place-items:center}
-  .card .art svg{height:240px;width:auto;max-width:100%}.card .art img{max-width:min(100%,420px);max-height:240px;width:auto;height:auto}
-  .card .meta{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:baseline}
-  .card h3{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:34px;line-height:1;letter-spacing:-.01em;text-transform:none}
-  .card .sub{grid-column:2/4}
-  .card.tbd h3{color:var(--mut)}
-
-  footer{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;padding:16vh var(--pad) 48px}
-  footer .say{grid-column:1/7;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(40px,5vw,72px);line-height:.95;text-transform:none;letter-spacing:-.02em}
-  footer .links{grid-column:9/13;display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;align-content:end}
-  footer .links a:hover{color:var(--blue)}
-  footer .base{grid-column:1/13;display:flex;justify-content:space-between;margin-top:12vh}
+  /* Fixed UI */
+  .hint{position:fixed;right:var(--pad);bottom:36px;z-index:10;transition:opacity .3s}
+  .progress{position:fixed;left:var(--pad);right:var(--pad);bottom:20px;height:1px;background:var(--line);z-index:10}
+  .progress i{display:block;height:100%;width:0;background:var(--ink)}
 
   @media (max-width:800px){
-    header,.feature,footer{display:flex;flex-direction:column;align-items:stretch;gap:32px}
-    footer .base{margin-top:48px}
-    .slotlabel b{font-size:20px}
-    header{min-height:auto;row-gap:40px}
-    h1,.index{grid-column:1/13}
-    .index{grid-template-columns:minmax(0,1fr) auto;gap:10px 16px}.index dd{text-align:right;white-space:nowrap}
-    .feature .art,.feature .txt{grid-column:1/13}
-    .grid{grid-template-columns:1fr}.card:nth-child(odd){border-right:0}
-    .card{grid-template-rows:220px auto}.card .art svg{height:180px}
-    footer .say,footer .links{grid-column:1/13}
+    h1{font-size:clamp(56px,17vw,96px)}
+    .index{gap:6px 16px}
+    .slotlabel b{font-size:22px}
+    .home{justify-content:flex-start;gap:28px}
   }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>SIJO<br>JOSEPH</h1>
-  <dl class="index small" id="index"></dl>
-</header>
+<div id="scroller">
+  <div id="track">
+    <section class="home" id="home">
+      <h1>SIJO<br>JOSEPH</h1>
+      <dl class="index small" id="index"></dl>
+    </section>
 
-<section class="stage" id="stage">
-  <div class="sticky">
-    <div class="track" id="track">
-      <img class="bagimg bagback" id="bagback" src="bag.webp" alt="">
-      <img class="bagimg bagfront" id="bagfront" src="bag.webp" alt="Blue everyday carry pouch: Cubby, Design Project 2">
-      <a class="baghit" id="baghit" href="#cubby" aria-label="Open Cubby, the main project"></a>
-      <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02 · main project · click the bag</span></div>
-      <div id="items"></div>
-    </div>
-    <div class="hint small mut" id="hint">Scroll to unpack · click any item to open it</div>
+    <img class="bagimg bagback" id="bagback" src="bag.webp" alt="">
+    <img class="bagimg bagfront" id="bagfront" src="bag.webp" alt="Blue everyday carry pouch: Cubby, Design Project 02">
+    <a class="baghit" id="baghit" href="javascript:void 0" aria-label="Cubby, the main project"></a>
+    <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02 · case study coming soon</span></div>
+    <div id="items"></div>
+
+    <section class="contact small" id="contact">
+      <p>Open to design projects<br>&amp; internships.</p>
+      <div class="links">
+        <a href="mailto:hello@sijo.work">Email ↗</a><a href="https://sijo.work">Portfolio ↗</a>
+        <a href="#">LinkedIn ↗</a><a href="#">Behance ↗</a>
+      </div>
+      <span class="mut">© 2026 Sijo Joseph</span>
+    </section>
   </div>
-</section>
+</div>
 
-<section class="feature" id="cubby">
-  <div class="art"><img src="bag.webp" alt="Cubby"></div>
-  <div class="txt">
-    <span class="small mut">Main project · Design Project 2 · 2026</span>
-    <h2>Cubby</h2>
-    <p class="lead">The bag that holds everything else. Case study coming soon.</p>
-    <a class="btn small" href="#">View case study ↗</a>
-  </div>
-</section>
-
-<div class="modhead small"><span>Modules</span><span class="mut">Semester 2026</span></div>
-<section class="grid small" id="grid"></section>
-
-<footer class="small" id="contact">
-  <p class="say">Open to design projects &amp; internships.</p>
-  <div class="links">
-    <a href="mailto:hello@sijo.work">Email ↗</a><a href="https://sijo.work">Portfolio ↗</a>
-    <a href="#">LinkedIn ↗</a><a href="#">Behance ↗</a>
-  </div>
-  <div class="base mut"><span>© 2026 Sijo Joseph</span><a href="#">Back to top ↑</a></div>
-</footer>
+<div class="hint small mut" id="hint">Scroll to unpack →</div>
+<div class="progress"><i id="bar"></i></div>
 
 <script>
 const S = {
-pendrive:`<img src="pendrive.png" alt="pendrive">`,
-lipbalm:`<img src="lipbalm.png" alt="lipbalm">`,
-notebook:`<img src="notebook.png" alt="notebook">`,
-pen:`<img src="pen.png" alt="pen">`,
-charger:`<img src="charger.png" alt="charger">`,
+pendrive:`<img src="pendrive.png" alt="Pendrive">`,
+lipbalm:`<img src="lipbalm.png" alt="Lip balm">`,
+notebook:`<img src="notebook.png" alt="Notebook">`,
+pen:`<img src="pen.png" alt="Pilot V pen">`,
+charger:`<img src="charger.png" alt="Charger">`,
 frame:`<img src="glasses.png" alt="Glasses">`,
-pencil:`<img src="pencil.png" alt="pencil">`
+pencil:`<img src="pencil.png" alt="Pencil">`
 };
-// Each item = one module. Edit name/module/link here.
+// Each item = one subject. Edit name / subject / link here. a = [x% inside the bag, tilt]
 const ITEMS = [
  {k:'pendrive', item:'Pendrive',    name:'Syntra',             module:'Retail Technology',          link:'https://sijo.work/syntra/', h:.42, a:[60,-6]},
  {k:'notebook', item:'Notebook',    name:'No-Broker',          module:'Design Management',          link:'nobroker/', h:.78, a:[40,-4]},
  {k:'frame',    item:'Glasses',     name:'SLA III',            module:'Visual Narratives',          link:'sla3/', h:.4,  a:[64,4]},
  {k:'pen',      item:'Pilot V pen', name:'Ather Energy',       module:'Retail Systems & Processes', link:'ather/', h:.78, a:[34,-10]},
- {k:'pencil',   item:'Pencil',      name:'Intro to Materials', module:'Wire, sheet, bamboo, wood',  link:'#', soon:1, h:.72, a:[50,8]},
- {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Bodies, reach and fit',      link:'#', soon:1, h:.9,  a:[26,-8]},
- {k:'lipbalm',  item:'Lip balm',    name:'About me',           module:'Say hello',                  link:'#contact', h:.9, a:[74,-6], tbd:1},
+ {k:'pencil',   item:'Pencil',      name:'Intro to Materials', module:'Coming soon',                link:'', h:.72, a:[50,8], soon:1},
+ {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Coming soon',                link:'', h:.9,  a:[26,-8], soon:1},
+ {k:'lipbalm',  item:'Lip balm',    name:'About me',           module:'Say hello',                  link:'#contact', h:.9, a:[74,-6], about:1},
 ];
+const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','https://sijo.work/syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
-const IDX=[["Syntra", "Retail Technology", "Syntra"], ["No-Broker", "Design Management", "No-Broker"], ["SLA III", "SLA III", "Visual Narratives"], ["Ather Energy", "Retail Systems", "Ather Energy"], ["Intro to Materials", "Intro to Materials", "Material studies"], ["Ergonomics", "Ergonomics", "IKEA study"]];
-$('index').innerHTML=`<a href="#cubby" class="main"><dt>Design Project 02</dt><dd>CUBBY</dd></a>`+
-  IDX.map(([n,sub,proj])=>{const it=ITEMS.find(i=>i.name===n);return `<a href="${it.link}"><dt>${sub}</dt><dd>${proj.toUpperCase()}</dd></a>`}).join('');
+$('index').innerHTML=IDX.map(([a,b,l],i)=>`<a ${l?`href="${l}"${/^http/.test(l)?' target="_blank"':''}`:''} class="${i?'':'main'}"><dt>${a}</dt><dd>${b.toUpperCase()}</dd></a>`).join('');
+
+const scroller=$('scroller'),track=$('track');
 const els=ITEMS.map((it,n)=>{
-  const d=document.createElement('a');d.className='item';d.href=it.soon?'javascript:void 0':it.link;if(it.soon){d.style.cursor='default'};if(/^http/.test(it.link))d.target='_blank';
+  const d=document.createElement('a');d.className='item'+(it.soon?' soon':'');
+  if(it.link){d.href=it.link;if(/^http/.test(it.link))d.target='_blank';
+    if(it.about)d.addEventListener('click',e=>{e.preventDefault();scroller.scrollTo({left:G.max,behavior:'smooth'})})}
   d.innerHTML=S[it.k];$('items').appendChild(d);
   const l=document.createElement('div');l.className='slotlabel small';
-  l.innerHTML=`<span class="num mut">${it.tbd?'':'0'+(n+1)+' · '}${it.item}</span><b>${it.name}</b><span class="mut">${it.soon?'Coming soon':it.module}</span>`;$('track').appendChild(l);it.label=l;
-  if(!it.tbd){const c=document.createElement('a');c.className='card';c.id=it.k;c.href=it.link;if(/^http/.test(it.link))c.target='_blank';
-  c.innerHTML=`<div class="art">${S[it.k]}</div><div class="meta"><span class="mut">0${n+1}</span><h3>${it.name}</h3><span>${it.soon?'':'↗'}</span><span class="sub mut">${it.soon?'Coming soon':it.module} · ${it.item}</span></div>`;
-  $('grid').appendChild(c);}
-  return d;
+  l.innerHTML=`<span class="mut">${it.about?'':'0'+(n+1)+' · '}${it.item}</span><b>${it.name}</b><span class="mut">${it.module}${it.link&&!it.about?' ↗':''}</span>`;
+  track.appendChild(l);it.label=l;return d;
 });
-const stage=$('stage'),track=$('track');
+
 const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-let G={};
+let G={max:0};
 function layout(){
   const W=innerWidth,H=innerHeight,mob=W<800;
-  const BW=Math.min(W*(mob?.95:.62),H*1.05),BH=BW*1.25,bx=(W-BW)/2,by=(H-BH)/2+(mob?0:H*.02);
-  for(const id of['bagback','bagfront']){const e=$(id);Object.assign(e.style,{left:bx+'px',top:by+'px',width:BW+'px',height:BH+'px'})}
+  // Home panel = one screen. Desktop: text left, bag right. Mobile: text top, bag below.
+  $('home').style.width=W+'px';
+  let BW,bx,by;
+  if(mob){const ib=$('index').getBoundingClientRect().bottom+12,avail=H-ib-56;
+    BW=Math.min(W*.95,avail/(1.25*.52));bx=(W-BW)/2;by=ib-BW*1.25*.27}
+  else{BW=Math.min(W*.5,H*1.05);bx=W-BW-W*.02;by=(H-BW*1.25)/2}
+  const BH=BW*1.25;
+  for(const id of['bagback','bagfront'])Object.assign($(id).style,{left:bx+'px',top:by+'px',width:BW+'px',height:BH+'px'});
   Object.assign($('baghit').style,{left:bx+BW*.11+'px',top:by+BH*.34+'px',width:BW*.78+'px',height:BH*.43+'px'});
-  Object.assign($('baglabel').style,{left:W/2+'px',top:by+BH*.79+'px'});
-  const IH=Math.min(H*(mob?.26:.34),300),slot=mob?W*.8:Math.max(360,W*.3),x0=W*(mob?.95:.9);
-  const L=x0+ITEMS.length*slot+W*(mob?.1:.25);
+  Object.assign($('baglabel').style,{left:bx+BW/2+'px',top:by+BH*.79+'px'});
+  // Items: a row to the right of the home screen, then the contact panel. The row ends there.
+  const IH=Math.min(H*(mob?.26:.34),300),slot=mob?W*.8:Math.max(340,W*.26),x0=W;
+  const contactW=mob?W:Math.max(560,W*.5);
+  const L=x0+ITEMS.length*slot+contactW;
   track.style.width=L+'px';
-  const D=L-W;stage.style.height=(D+H*1.6)+'px';
-  G={W,H,BW,BH,bx,by,IH,slot,x0,D};
+  Object.assign($('contact').style,{left:(L-contactW)+'px',width:contactW+'px'});
   ITEMS.forEach((it,i)=>{const e=els[i];e.style.height=IH*it.h+'px';
-    const cx=x0+i*slot+slot/2;it.end=[cx,H*.46];it.start=[bx+BW*it.a[0]/100,by+BH*.37];
-    Object.assign(it.label.style,{left:cx+'px',top:H*.46+IH*.5+28+'px'});});
+    const cx=x0+i*slot+slot/2;it.end=[cx,H*.44];it.start=[bx+BW*it.a[0]/100,by+BH*.37];
+    Object.assign(it.label.style,{left:cx+'px',top:H*.44+IH*.5+30+'px'});});
+  G={W,H,slot,max:L-W};
 }
 function tick(){
-  const r=stage.getBoundingClientRect(),total=stage.offsetHeight-innerHeight;
-  const p=Math.min(1,Math.max(0,-r.top/total));
-  // first 25% of the scroll: items lift out of the bag; then the row slides sideways
-  const lift=ease(Math.min(1,p/.22)),slide=Math.min(1,Math.max(0,(p-.18)/.82));
-  track.style.transform=`translateX(${-slide*G.D}px)`;
-  $('hint').style.opacity=p<.05?1:0;
+  const x=scroller.scrollLeft,p=G.max?x/G.max:0;
+  $('bar').style.width=(p*100)+'%';
+  $('hint').style.opacity=x<20?1:0;
   ITEMS.forEach((it,i)=>{const e=els[i];
-    const t=ease(Math.min(1,Math.max(0,(p-.02-i*.025)/.3)));
-    const x=it.start[0]+(it.end[0]-it.start[0])*t,y=it.start[1]+(it.end[1]-it.start[1])*t-Math.sin(t*Math.PI)*G.H*.12;
+    // each item slides out of the bag sideways as the row moves
+    const t=ease(Math.min(1,Math.max(0,(x-i*G.slot*.5)/(G.W*.6))));
+    const px=it.start[0]+(it.end[0]-it.start[0])*t,py=it.start[1]+(it.end[1]-it.start[1])*t-Math.sin(t*Math.PI)*G.H*.1;
     const sc=.55+.45*t,rot=it.a[1]*(1-t)+(i%2?3:-3)*t;
-    e.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%) scale(${sc}) rotate(${rot}deg)`;
+    e.style.transform=`translate(${px}px,${py}px) translate(-50%,-50%) scale(${sc}) rotate(${rot}deg)`;
     e.style.zIndex=t>.02?3:1;it.label.style.opacity=t>.95?1:0;
   });
   requestAnimationFrame(tick);
 }
+// Scrolling down moves the page to the right. There is nothing below the home screen.
+scroller.addEventListener('wheel',e=>{
+  const d=Math.abs(e.deltaY)>Math.abs(e.deltaX)?e.deltaY:e.deltaX;
+  e.preventDefault();scroller.scrollLeft+=d;
+},{passive:false});
+// Phones: a vertical swipe also moves the page sideways
+let ty=null,tx=null;
+scroller.addEventListener('touchstart',e=>{ty=e.touches[0].clientY;tx=e.touches[0].clientX},{passive:true});
+scroller.addEventListener('touchmove',e=>{if(ty===null)return;const y=e.touches[0].clientY,x=e.touches[0].clientX,dy=ty-y,dx=tx-x;
+  if(Math.abs(dy)>Math.abs(dx)){e.preventDefault();scroller.scrollLeft+=dy*1.4}ty=y;tx=x},{passive:false});
+scroller.addEventListener('touchend',()=>{ty=tx=null});
+addEventListener('keydown',e=>{
+  const step={ArrowDown:160,ArrowRight:160,ArrowUp:-160,ArrowLeft:-160,PageDown:innerWidth*.8,' ':innerWidth*.8,PageUp:-innerWidth*.8}[e.key];
+  if(step!==undefined){e.preventDefault();scroller.scrollBy({left:step,behavior:'smooth'})}
+  if(e.key==='Home')scroller.scrollTo({left:0,behavior:'smooth'});
+  if(e.key==='End')scroller.scrollTo({left:G.max,behavior:'smooth'});
+});
 addEventListener('resize',layout);
-document.querySelector('.bagback').complete?layout():$('bagback').addEventListener('load',layout);layout();
-tick();
+layout();tick();
 </script>
 </body>
 </html>
