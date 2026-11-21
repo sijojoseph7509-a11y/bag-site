@@ -23,7 +23,8 @@
   .home{position:absolute;left:0;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between}
   h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(64px,10.5vw,168px);line-height:.92;letter-spacing:-.035em;padding-bottom:.06em}
   h1{cursor:default;white-space:nowrap;width:max-content;font-size:calc(var(--fs,1) * clamp(64px,10.5vw,168px))}
-  h1 .ln{display:block}
+  h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+  h1 .ch{display:inline-block;will-change:transform}
   h1{display:flex;flex-direction:column;justify-content:flex-end}
   .index{display:grid;grid-template-columns:auto 1fr;gap:9px 28px;max-width:460px}
   .index a{display:contents}
@@ -226,27 +227,25 @@ hit.addEventListener('mouseenter',()=>{if(scroller.scrollLeft<40)track.classList
 hit.addEventListener('mouseleave',()=>track.classList.remove('scan'));
 hit.addEventListener('touchstart',()=>track.classList.toggle('scan'),{passive:true});
 scroller.addEventListener('scroll',()=>{if(scroller.scrollLeft>40)track.classList.remove('scan')});
-// Name: letter scramble like chiquach.com. Hover -> Semester 3 Jury; leave -> back to the name.
+// Name: on hover the letters roll up and out, and the new words rise in from below, one letter after another.
 const nameEl=$('name'),lines=[...nameEl.querySelectorAll('.ln')];
-const seg=t=>[...t];
-const LAT='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const STATES={name:['SIJO','JOSEPH'],en:['SEMESTER 3','JURY']};
-let run=0;
+let run=0,cur='name';
 function fit(){nameEl.style.setProperty('--fs',1);const max=innerWidth<800?innerWidth*.88:innerWidth*.5;const w=nameEl.scrollWidth;if(w>max)nameEl.style.setProperty('--fs',max/w)}
-function scramble(key,then){
-  const id=++run,target=STATES[key].map(seg),pool=LAT;
-  const from=lines.map(l=>seg(l.textContent));const t0=performance.now();
-  const plan=target.map((tl,li)=>{const n=Math.max(tl.length,from[li].length);return Array.from({length:n},(_,i)=>180+i*55+li*90+Math.random()*120)});
-  (function step(now){if(id!==run)return;let done=true;
-    lines.forEach((l,li)=>{const tl=target[li];l.textContent=plan[li].map((at,i)=>{if(now-t0>=at)return tl[i]||'';done=false;const ch=tl[i];if(ch===' '||ch===undefined&&now-t0>at-60)return ch||'';return pool[Math.random()*pool.length|0]}).join('')});
-    fit();if(!done)requestAnimationFrame(step);else if(then)then(id)})(t0);
+function paint(key){lines.forEach((l,li)=>{l.innerHTML=[...STATES[key][li]].map(c=>`<span class="ch">${c===' '?'&nbsp;':c}</span>`).join('')});fit()}
+const EASE='cubic-bezier(.22,1,.36,1)';
+async function swap(key){
+  if(key===cur)return;const id=++run;cur=key;
+  const outs=[];lines.forEach((l,li)=>[...l.children].forEach((c,i)=>outs.push(c.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(-105%)',opacity:0}],{duration:420,delay:i*22+li*40,easing:'cubic-bezier(.55,0,.75,.2)',fill:'forwards'}).finished)));
+  await Promise.all(outs);if(id!==run)return;
+  paint(key);
+  lines.forEach((l,li)=>[...l.children].forEach((c,i)=>c.animate([{transform:'translateY(105%)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:700,delay:i*32+li*70,easing:EASE,fill:'backwards'})));
 }
-let mlTimer=null;
-nameEl.addEventListener('mouseenter',()=>{clearTimeout(mlTimer);scramble('en')});
-nameEl.addEventListener('mouseleave',()=>{clearTimeout(mlTimer);scramble('name')});
-nameEl.addEventListener('touchstart',()=>{clearTimeout(mlTimer);scramble('en');mlTimer=setTimeout(()=>scramble('name'),2600)},{passive:true});
+nameEl.addEventListener('mouseenter',()=>swap('en'));
+nameEl.addEventListener('mouseleave',()=>swap('name'));
+let tTimer;nameEl.addEventListener('touchstart',()=>{clearTimeout(tTimer);swap('en');tTimer=setTimeout(()=>swap('name'),2600)},{passive:true});
 nameEl.style.height=nameEl.offsetHeight+'px';
-scramble('name');
+paint('name');
 addEventListener('resize',layout);
 layout();tick();
 </script>
