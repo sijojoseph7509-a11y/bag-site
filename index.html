@@ -133,6 +133,7 @@ const ITEMS = [
  {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Coming soon',                link:'', h:.9,  a:[26,-8], soon:1},
  {k:'lipbalm',  item:'Lip balm',    name:'Thank you',          module:'The end',                  link:'#contact', h:.9, a:[74,-6], about:1},
 ];
+const ASP={pendrive:886/566,notebook:497/569,frame:996/359,pen:900/851,pencil:900/754,charger:847/900,lipbalm:193/900};
 const REAL={pendrive:[6,.79,.5,-8],notebook:[19,.29,.575,-8],frame:[14.5,.62,.46,4],pen:[14,.69,.635,0],pencil:[17.5,.5,.625,6],charger:[11,.46,.5,-6],lipbalm:[7,.8,.62,-4]};
 const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
@@ -179,9 +180,9 @@ function layout(){
   track.style.width=L+'px';
   Object.assign($('contact').style,{left:(L-contactW)+'px',width:contactW+'px'});
   ITEMS.forEach((it,i)=>{const e=els[i];e.style.height=IH*it.h+'px';
-    const cx=x0+i*slot+slot/2;it.end=[cx,H*.44];const R=REAL[it.k],im=e.querySelector('img'),asp=(im.naturalWidth||1)/(im.naturalHeight||1);
-    const hpx=IH*it.h,longest=Math.max(hpx,hpx*asp),unit=BW*.78/35;
-    it.rs=Math.min(1,R[0]*unit/longest);e.style.width=hpx*asp+'px';it.start=[bx+BW*R[1],by+BH*R[2]];it.a=[0,R[3]];it.ih=hpx;
+    const cx=x0+i*slot+slot/2;it.end=[cx,H*.44];const R=REAL[it.k],asp=ASP[it.k];
+    const hpx=IH*it.h,longest=Math.max(hpx,hpx*asp),unit=BW*.77/28;
+    it.rs=R[0]*unit/longest;e.style.width=hpx*asp+'px';it.start=[bx+BW*R[1],by+BH*R[2]];it.a=[0,R[3]];it.ih=hpx;
     const Q=Math.min(slot*.78,IH*1.25);Object.assign(it.frame.style,{left:cx+'px',top:H*.44+'px',width:Q+'px',height:Q+'px'});
     Object.assign(it.label.style,{left:cx+'px',top:H*.44+Q/2+52+'px'});});
   G={W,H,slot,max:L-W};
