@@ -46,7 +46,7 @@
   .item,.bagimg{transition:opacity .4s ease}
 
   .item{position:absolute;z-index:1;left:0;top:0;display:block;cursor:pointer}
-  .item img{height:100%;width:auto;display:block;filter:drop-shadow(0 12px 20px rgba(20,40,80,.16));transition:filter .25s}
+  .item img{height:100%;width:100%;object-fit:contain;display:block;filter:drop-shadow(0 12px 20px rgba(20,40,80,.16));transition:filter .25s}
   .item:hover img{filter:drop-shadow(0 18px 28px rgba(20,40,80,.3))}
   .item.soon{cursor:default}
   /* x-ray look by default, real photo when highlighted */
@@ -133,6 +133,7 @@ const ITEMS = [
  {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Coming soon',                link:'', h:.9,  a:[26,-8], soon:1},
  {k:'lipbalm',  item:'Lip balm',    name:'Thank you',          module:'The end',                  link:'#contact', h:.9, a:[74,-6], about:1},
 ];
+const REAL={pendrive:[6,.79,.5,-8],notebook:[19,.29,.575,-8],frame:[14.5,.62,.46,4],pen:[14,.69,.635,0],pencil:[17.5,.5,.625,6],charger:[11,.46,.5,-6],lipbalm:[7,.8,.62,-4]};
 const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
 $('index').innerHTML=IDX.map(([a,b,l],i)=>`<a ${l?`href="${l}"${/^http/.test(l)?' target="_blank"':''}`:''} class="${i?'':'main'}"><dt>${a}</dt><dd>${b.toUpperCase()}</dd></a>`).join('');
@@ -178,7 +179,9 @@ function layout(){
   track.style.width=L+'px';
   Object.assign($('contact').style,{left:(L-contactW)+'px',width:contactW+'px'});
   ITEMS.forEach((it,i)=>{const e=els[i];e.style.height=IH*it.h+'px';
-    const cx=x0+i*slot+slot/2;it.end=[cx,H*.44];it.start=[bx+BW*(.27+(i%4)*.155),by+BH*(i<4?.52:.65)];it.ih=IH*it.h;
+    const cx=x0+i*slot+slot/2;it.end=[cx,H*.44];const R=REAL[it.k],im=e.querySelector('img'),asp=(im.naturalWidth||1)/(im.naturalHeight||1);
+    const hpx=IH*it.h,longest=Math.max(hpx,hpx*asp),unit=BW*.78/35;
+    it.rs=Math.min(1,R[0]*unit/longest);e.style.width=hpx*asp+'px';it.start=[bx+BW*R[1],by+BH*R[2]];it.a=[0,R[3]];it.ih=hpx;
     const Q=Math.min(slot*.78,IH*1.25);Object.assign(it.frame.style,{left:cx+'px',top:H*.44+'px',width:Q+'px',height:Q+'px'});
     Object.assign(it.label.style,{left:cx+'px',top:H*.44+Q/2+52+'px'});});
   G={W,H,slot,max:L-W};
@@ -198,7 +201,7 @@ function tick(){
     const topY=it.start[1]-G.H*.2;
     const px=it.start[0]+(it.end[0]-it.start[0])*glide;
     const py=(it.start[1]+(topY-it.start[1])*lift)+(it.end[1]-topY)*glide;
-    const sc=.38+.17*lift+.45*glide;
+    const sc=it.rs*(1+.12*lift*(1-glide))+(1-it.rs)*glide;
     const rot=it.a[1]*(1-lift)+(i%2?2:-2)*glide+Math.sin(glide*Math.PI)*(i%2?-4:4);
     e.style.transform=`translate(${px}px,${py}px) translate(-50%,-50%) scale(${sc}) rotate(${rot}deg)`;
     it.out=t>.97;e.classList.toggle('home',t<.02);if(!it.out&&d0(e))it.frame.classList.remove('on');e.style.zIndex=t>.02?3:1;it.label.style.opacity=t>.97?1:0;
@@ -252,6 +255,7 @@ fit();nameEl.style.height=nameEl.offsetHeight+'px';
 addEventListener('resize',fit);
 addEventListener('resize',layout);
 layout();tick();
+document.querySelectorAll('.item img').forEach(im=>im.complete||im.addEventListener('load',layout));
 </script>
 </body>
 </html>
