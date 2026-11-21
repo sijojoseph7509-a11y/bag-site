@@ -17,7 +17,7 @@
 
   /* Hero: name left, index right, on one 12-col grid */
   header{display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px;align-items:end;padding:var(--pad);padding-top:clamp(40px,6vw,88px);min-height:62vh}
-  h1{grid-column:1/8;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(76px,12.5vw,200px);line-height:.8;letter-spacing:-.035em}
+  h1{grid-column:1/8;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(76px,12.5vw,200px);line-height:.92;letter-spacing:-.035em;padding-bottom:.08em}
   .index{grid-column:9/13;display:grid;grid-template-columns:auto 1fr;gap:10px 28px;padding-bottom:12px}
   .index a{display:contents}
   .index a:hover dd{color:var(--blue)}
@@ -124,9 +124,9 @@
 
 <script>
 const S = {
-pendrive:`<svg viewBox="0 0 60 140"><rect x="14" y="2" width="32" height="30" rx="4" fill="#c9ccd2" stroke="#8d929b" stroke-width="2"/><rect x="22" y="12" width="16" height="6" rx="3" fill="#6b717b"/><rect x="6" y="30" width="48" height="106" rx="12" fill="#1f2a3a"/><rect x="12" y="40" width="36" height="88" rx="9" fill="#2c3b52"/><circle cx="30" cy="118" r="5" fill="#9fd0ff"/><text x="30" y="80" fill="#cfe3ff" font-size="11" text-anchor="middle" font-family="Inter Tight" transform="rotate(-90 30 80)">USB-C 128GB</text></svg>`,
+pendrive:`<img src="pendrive.png" alt="pendrive">`,
 lipbalm:`<img src="lipbalm.png" alt="lipbalm">`,
-notebook:`<svg viewBox="0 0 200 260"><rect x="6" y="4" width="188" height="252" rx="8" fill="#e9e2d0" stroke="#c7bea6" stroke-width="2"/><rect x="6" y="4" width="22" height="252" rx="8" fill="#d8cfb7"/><g stroke="#cfc6ad" stroke-width="1.5">${[...Array(11)].map((_,i)=>`<line x1="44" x2="180" y1="${50+i*18}" y2="${50+i*18}"/>`).join('')}</g><rect x="168" y="4" width="8" height="252" fill="#2f5f9e"/><text x="110" y="34" fill="#7b725c" font-size="13" text-anchor="middle" font-family="Cormorant Garamond">field notes</text></svg>`,
+notebook:`<img src="notebook.png" alt="notebook">`,
 pen:`<img src="pen.png" alt="pen">`,
 charger:`<img src="charger.png" alt="charger">`,
 frame:`<img src="glasses.png" alt="Glasses">`,
@@ -134,8 +134,8 @@ pencil:`<img src="pencil.png" alt="pencil">`
 };
 // Each item = one module. Edit name/module/link here.
 const ITEMS = [
- {k:'pendrive', item:'USB-C pendrive', name:'Syntra',     module:'Retail Tech',               link:'https://sijo.work/syntra/', w:'7%',   a:[56,38,12], b:[104,60,18]},
- {k:'notebook', item:'Notebook',       name:'No-Broker',  module:'Design Management',         link:'#', w:'24%', a:[44,40,-4], b:[-4,18,-10]},
+ {k:'pendrive', item:'Pendrive', name:'Syntra',     module:'Retail Tech',               link:'https://sijo.work/syntra/', w:'17%',  a:[56,38,10], b:[104,60,-8]},
+ {k:'notebook', item:'Notebook',       name:'No-Broker',  module:'Design Management',         link:'#', w:'21%', a:[44,40,-4], b:[-4,18,-6]},
  {k:'frame',    item:'Glasses',    name:'SLA 3',      module:'Photography',               link:'#', w:'30%', a:[60,39,4],  b:[104,18,6]},
  {k:'charger',  item:'Charger',        name:'Ather Energy',module:'Retail Systems & Processes',link:'#', w:'24%', a:[30,42,-8], b:[-8,66,-6]},
  {k:'pen',      item:'Pen',            name:'Module 05',  module:'Add project',               link:'#', w:'17%', a:[38,34,-10], b:[28,0,-6], tbd:1},
