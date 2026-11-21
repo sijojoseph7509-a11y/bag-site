@@ -34,10 +34,11 @@
   .baghit{position:absolute;z-index:4;cursor:pointer;border-radius:12px}
   .baglabel{position:absolute;z-index:5;transform:translateX(-50%);text-align:center;white-space:nowrap}
   .baghit:hover ~ .baglabel b{color:var(--blue)}
-    .xray{position:absolute;z-index:3;object-fit:contain;opacity:0;pointer-events:none;transition:opacity .45s ease}
-  #track.scan .xray{opacity:1}
-  #track.scan .bagfront,#track.scan .bagback{opacity:0}
-  #track.scan .item{opacity:0}
+  .bagimg{transition:filter .5s ease,opacity .5s ease}
+  #track.scan .bagback,#track.scan .bagfront{filter:grayscale(1) invert(1) sepia(1) saturate(3.5) hue-rotate(185deg) brightness(1.05) contrast(.85)}
+  #track.scan .bagback{opacity:.55}
+  #track.scan .bagfront{opacity:.38}
+  #track.scan .item.home img{filter:grayscale(1) invert(1) sepia(1) saturate(4) hue-rotate(var(--hue,190deg)) brightness(1.04) contrast(.9)}
   .item,.bagimg{transition:opacity .4s ease}
 
   .item{position:absolute;z-index:1;left:0;top:0;display:block;cursor:pointer}
@@ -80,6 +81,7 @@
     .index{gap:6px 16px}
     .slotlabel b{font-size:22px}
     .home{justify-content:flex-start;gap:28px}
+    .baglabel .dk{display:none}
   }
 </style>
 </head>
@@ -94,9 +96,8 @@
 
     <img class="bagimg bagback" id="bagback" src="bag.webp" alt="">
     <img class="bagimg bagfront" id="bagfront" src="bag.webp" alt="Blue everyday carry pouch: Cubby, Design Project 02">
-    <img class="xray" id="xray" src="xray.png" alt="X-ray view of the bag with the seven items inside">
     <a class="baghit" id="baghit" href="javascript:void 0" aria-label="Cubby, the main project"></a>
-    <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02 · case study coming soon · hover to look inside</span></div>
+    <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02<span class="dk"> · case study coming soon · hover to look inside</span></span></div>
     <div id="items"></div>
 
     <section class="contact small" id="contact">
@@ -156,6 +157,7 @@ const els=ITEMS.map((it,n)=>{
 });
 
 const d0=e=>{e.classList.remove('on');return true};
+const easeOut=t=>1-Math.pow(1-t,3);
 const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 let G={max:0};
 function layout(){
@@ -170,7 +172,6 @@ function layout(){
   for(const id of['bagback','bagfront'])Object.assign($(id).style,{left:bx+'px',top:by+'px',width:BW+'px',height:BH+'px'});
   Object.assign($('baghit').style,{left:bx+BW*.11+'px',top:by+BH*.34+'px',width:BW*.78+'px',height:BH*.43+'px'});
   Object.assign($('baglabel').style,{left:bx+BW/2+'px',top:by+BH*.79+'px'});
-  Object.assign($('xray').style,{left:bx+BW*.08+'px',top:by+BH*.315+'px',width:BW*.84+'px',height:BH*.45+'px'});
   // Items: a row to the right of the home screen, then the contact panel. The row ends there.
   const IH=Math.min(H*(mob?.26:.34),300),slot=mob?W*.8:Math.max(340,W*.26),x0=W;
   const contactW=mob?W:Math.max(560,W*.5);
@@ -188,12 +189,20 @@ function tick(){
   $('bar').style.width=(p*100)+'%';
   $('hint').style.opacity=x<20?1:0;
   ITEMS.forEach((it,i)=>{const e=els[i];
-    // each item slides out of the bag sideways as the row moves
-    const t=ease(Math.min(1,Math.max(0,(x/(G.W*.5))-i*.06)));
-    const px=it.start[0]+(it.end[0]-it.start[0])*t,py=it.start[1]+(it.end[1]-it.start[1])*t-Math.sin(t*Math.PI)*G.H*.1;
-    const sc=.38+.62*t,rot=it.a[1]*(1-t)+(i%2?3:-3)*t;
+    // target progress for this item, staggered so they leave one after another
+    const tgt=Math.min(1,Math.max(0,x/(G.W*.55)-i*.07));
+    it.p=(it.p??tgt)+(tgt-(it.p??tgt))*.14;            // inertia: eases toward the scroll position
+    if(Math.abs(it.p-tgt)<.0005)it.p=tgt;
+    const t=it.p;
+    const lift=easeOut(Math.min(1,t/.3));                // phase 1: rise out of the pocket
+    const glide=ease(Math.max(0,(t-.22)/.78));           // phase 2: glide sideways into place
+    const topY=it.start[1]-G.H*.2;
+    const px=it.start[0]+(it.end[0]-it.start[0])*glide;
+    const py=(it.start[1]+(topY-it.start[1])*lift)+(it.end[1]-topY)*glide;
+    const sc=.38+.17*lift+.45*glide;
+    const rot=it.a[1]*(1-lift)+(i%2?2:-2)*glide+Math.sin(glide*Math.PI)*(i%2?-4:4);
     e.style.transform=`translate(${px}px,${py}px) translate(-50%,-50%) scale(${sc}) rotate(${rot}deg)`;
-    it.out=t>.95;e.classList.toggle('home',t<.02);if(!it.out&&d0(e))it.frame.classList.remove('on');e.style.zIndex=t>.02?3:1;it.label.style.opacity=t>.95?1:0;
+    it.out=t>.97;e.classList.toggle('home',t<.02);if(!it.out&&d0(e))it.frame.classList.remove('on');e.style.zIndex=t>.02?3:1;it.label.style.opacity=t>.97?1:0;
   });
   requestAnimationFrame(tick);
 }
