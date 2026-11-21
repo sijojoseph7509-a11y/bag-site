@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sijo Joseph · Semester work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Cormorant+Infant:wght@300&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{--ink:#111;--mut:#9a9a9a;--line:#e8e8e6;--blue:#2f5f9e;--pad:clamp(20px,4vw,64px)}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -22,9 +22,9 @@
   /* Home panel: name + index (left), bag (right) */
   .home{position:absolute;left:0;top:0;height:100%;padding:var(--pad);display:flex;flex-direction:column;justify-content:space-between}
   h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(64px,10.5vw,168px);line-height:.92;letter-spacing:-.035em;padding-bottom:.06em}
-  h1{cursor:default;white-space:nowrap;width:max-content;font-size:calc(var(--fs,1) * clamp(64px,10.5vw,168px))}
-  h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
-  h1 .ch{display:inline-block;will-change:transform}
+  h1{font-variant-numeric:lining-nums;font-feature-settings:'lnum' 1;cursor:default;white-space:nowrap;width:max-content;font-size:calc(var(--fs,1) * clamp(64px,10.5vw,168px))}
+  h1 .ln{display:block;white-space:pre}
+  h1 .d{font-family:"Cormorant Infant","Cormorant Garamond",serif}
   h1{display:flex;flex-direction:column;justify-content:flex-end}
   .index{display:grid;grid-template-columns:auto 1fr;gap:9px 28px;max-width:460px}
   .index a{display:contents}
@@ -227,25 +227,29 @@ hit.addEventListener('mouseenter',()=>{if(scroller.scrollLeft<40)track.classList
 hit.addEventListener('mouseleave',()=>track.classList.remove('scan'));
 hit.addEventListener('touchstart',()=>track.classList.toggle('scan'),{passive:true});
 scroller.addEventListener('scroll',()=>{if(scroller.scrollLeft>40)track.classList.remove('scan')});
-// Name: on hover the letters roll up and out, and the new words rise in from below, one letter after another.
+// Name: chiquach-style. On hover every letter flips quickly through a few letters and lands on the new word.
 const nameEl=$('name'),lines=[...nameEl.querySelectorAll('.ln')];
 const STATES={name:['SIJO','JOSEPH'],en:['SEMESTER 3','JURY']};
+const POOL=[...new Set((STATES.name.join('')+STATES.en.join('')).replace(/[^A-Z]/g,''))];
 let run=0,cur='name';
-function fit(){nameEl.style.setProperty('--fs',1);const max=innerWidth<800?innerWidth*.88:innerWidth*.5;const w=nameEl.scrollWidth;if(w>max)nameEl.style.setProperty('--fs',max/w)}
-function paint(key){lines.forEach((l,li)=>{l.innerHTML=[...STATES[key][li]].map(c=>`<span class="ch">${c===' '?'&nbsp;':c}</span>`).join('')});fit()}
-const EASE='cubic-bezier(.22,1,.36,1)';
-async function swap(key){
+// one size for both states, so nothing jumps
+function fit(){nameEl.style.setProperty('--fs',1);let w=0;const keep=lines.map(l=>l.textContent);
+  for(const k in STATES){lines.forEach((l,i)=>l.textContent=STATES[k][i]);w=Math.max(w,nameEl.scrollWidth)}
+  lines.forEach((l,i)=>l.textContent=keep[i]);const max=innerWidth<800?innerWidth*.88:innerWidth*.46;nameEl.style.setProperty('--fs',Math.min(1,max/w))}
+function swap(key){
   if(key===cur)return;const id=++run;cur=key;
-  const outs=[];lines.forEach((l,li)=>[...l.children].forEach((c,i)=>outs.push(c.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(-105%)',opacity:0}],{duration:420,delay:i*22+li*40,easing:'cubic-bezier(.55,0,.75,.2)',fill:'forwards'}).finished)));
-  await Promise.all(outs);if(id!==run)return;
-  paint(key);
-  lines.forEach((l,li)=>[...l.children].forEach((c,i)=>c.animate([{transform:'translateY(105%)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:700,delay:i*32+li*70,easing:EASE,fill:'backwards'})));
+  const tgt=STATES[key],t0=performance.now();
+  const plan=tgt.map((tl,li)=>{const n=Math.max(tl.length,lines[li].textContent.length);return Array.from({length:n},(_,i)=>({end:70+i*28+li*45,flips:0}))});
+  (function step(now){if(id!==run)return;const el=now-t0;let done=true;
+    lines.forEach((l,li)=>{l.innerHTML=plan[li].map((p,i)=>{const ch=tgt[li][i]??'';if(el>=p.end)return ch;done=false;if(ch===' ')return ' ';
+      return el<p.end-140?(l.textContent[i]??''):POOL[(Math.floor(el/45)+i*7+li*3)%POOL.length]}).join('').replace(/\s+$/,'').replace(/(\d)/g,'<span class="d">$1</span>')});
+    if(!done)requestAnimationFrame(step)})(t0);
 }
 nameEl.addEventListener('mouseenter',()=>swap('en'));
 nameEl.addEventListener('mouseleave',()=>swap('name'));
 let tTimer;nameEl.addEventListener('touchstart',()=>{clearTimeout(tTimer);swap('en');tTimer=setTimeout(()=>swap('name'),2600)},{passive:true});
-nameEl.style.height=nameEl.offsetHeight+'px';
-paint('name');
+fit();nameEl.style.height=nameEl.offsetHeight+'px';
+addEventListener('resize',fit);
 addEventListener('resize',layout);
 layout();tick();
 </script>
