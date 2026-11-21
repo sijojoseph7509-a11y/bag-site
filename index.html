@@ -125,7 +125,7 @@ pencil:`<img src="pencil.png" alt="Pencil">`
 };
 // Each item = one subject. Edit name / subject / link here. a = [x% inside the bag, tilt]
 const ITEMS = [
- {k:'pendrive', item:'Pendrive',    name:'Syntra',             module:'Retail Technology',          link:'https://sijo.work/syntra/', h:.42, a:[60,-6]},
+ {k:'pendrive', item:'Pendrive',    name:'Syntra',             module:'Retail Technology',          link:'syntra/', h:.42, a:[60,-6]},
  {k:'notebook', item:'Notebook',    name:'No-Broker',          module:'Design Management',          link:'nobroker/', h:.78, a:[40,-4]},
  {k:'frame',    item:'Glasses',     name:'SLA III',            module:'Visual Narratives',          link:'sla3/', h:.4,  a:[64,4]},
  {k:'pen',      item:'Pilot V pen', name:'Ather Energy',       module:'Retail Systems & Processes', link:'ather/', h:.78, a:[34,-10]},
@@ -133,7 +133,7 @@ const ITEMS = [
  {k:'charger',  item:'Charger',     name:'Ergonomics',         module:'Coming soon',                link:'', h:.9,  a:[26,-8], soon:1},
  {k:'lipbalm',  item:'Lip balm',    name:'About me',           module:'Say hello',                  link:'#contact', h:.9, a:[74,-6], about:1},
 ];
-const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','https://sijo.work/syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
+const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
 $('index').innerHTML=IDX.map(([a,b,l],i)=>`<a ${l?`href="${l}"${/^http/.test(l)?' target="_blank"':''}`:''} class="${i?'':'main'}"><dt>${a}</dt><dd>${b.toUpperCase()}</dd></a>`).join('');
 
