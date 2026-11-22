@@ -1,0 +1,38 @@
+/* Shared slide viewer for every project: one slide per screen, navigation is sideways only. */
+:root{--ink:#111;--mut:#9a9a9a;--line:#e8e8e6;--pad:clamp(20px,4vw,64px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#fff;color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.small{font-size:11px;letter-spacing:.04em;text-transform:uppercase;line-height:1.6}
+.mut{color:var(--mut)}
+
+.deck{position:fixed;inset:0;overflow:hidden}
+.track{display:flex;height:100%;will-change:transform;transition:transform .55s cubic-bezier(.22,1,.36,1)}
+.slide{flex:0 0 100vw;height:100%;display:flex;align-items:center;justify-content:center;padding:56px 0 64px;background:var(--bg,#fff)}
+.slide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;user-select:none;-webkit-user-drag:none}
+
+/* title + end slides */
+.slide.title{justify-content:space-between;padding:0 var(--pad);gap:40px}
+.slide.title .txt{display:flex;flex-direction:column;gap:18px;max-width:52%}
+.slide.title h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(64px,10vw,170px);line-height:.92;letter-spacing:-.03em}
+.slide.title p.lead{font-size:clamp(15px,1.3vw,19px);line-height:1.55;color:#444;max-width:46ch}
+.slide.title .obj{max-height:60vh;max-width:38vw}
+.slide.end{flex-direction:column;gap:22px}
+.slide.end h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(48px,7vw,110px);letter-spacing:-.02em}
+.slide.end a{border:1px solid var(--ink);border-radius:999px;padding:12px 22px}
+.slide.end a:hover{background:var(--ink);color:#fff}
+
+/* chrome */
+.bar{position:fixed;left:0;right:0;top:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);z-index:5;pointer-events:none}
+.bar>*{pointer-events:auto}
+.bar a:hover{color:#2f5f9e}
+.foot{position:fixed;left:var(--pad);right:var(--pad);bottom:22px;display:flex;align-items:center;gap:18px;z-index:5}
+.prog{flex:1;height:1px;background:var(--line);position:relative}
+.prog i{position:absolute;left:0;top:0;height:100%;background:var(--ink);transition:width .55s cubic-bezier(.22,1,.36,1)}
+.nav{position:fixed;top:50%;transform:translateY(-50%);z-index:5;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;opacity:.0;transition:opacity .3s}
+.deck:hover~.nav,.nav:hover{opacity:1}
+.nav.prev{left:16px}.nav.next{right:16px}
+.nav[disabled]{opacity:0!important;pointer-events:none}
+.nav svg{width:18px;height:18px}
+.hint{transition:opacity .4s}
+@media (max-width:800px){.slide.title{flex-direction:column;justify-content:center;text-align:left;align-items:flex-start}.slide.title .txt{max-width:100%}.slide.title .obj{max-height:30vh;max-width:60vw;align-self:center}.nav{opacity:1;width:38px;height:38px}}
