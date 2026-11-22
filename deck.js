@@ -7,7 +7,7 @@
   let i = Math.min(N - 1, Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
 
   // load images just ahead of where you are, so the deck opens fast
-  const warm = (k) => { for (let j = k - 1; j <= k + 2; j++) { const im = slides[j] && slides[j].querySelector('img[data-src]'); if (im) { im.src = im.dataset.src; if (im.dataset.srcset) im.srcset = im.dataset.srcset; im.removeAttribute('data-src'); } } };
+  const warm = (k) => { for (let j = k - 1; j <= k + 2; j++) { if (!slides[j]) continue; slides[j].querySelectorAll('[data-src]').forEach((im) => { im.src = im.dataset.src; if (im.dataset.srcset) im.srcset = im.dataset.srcset; im.removeAttribute('data-src'); }); slides[j].querySelectorAll('[data-bg]').forEach((el) => { el.style.backgroundImage = `url(${el.dataset.bg})`; el.removeAttribute('data-bg'); }); } };
 
   function go(k, instant) {
     i = Math.max(0, Math.min(N - 1, k));
@@ -18,6 +18,7 @@
     prev.disabled = i === 0; next.disabled = i === N - 1;
     history.replaceState(null, '', '#' + (i + 1));
     warm(i);
+    slides.forEach((sl, k) => { const on = k === i; if (sl.classList.contains('on') !== on) { sl.classList.toggle('on', on); sl.dispatchEvent(new CustomEvent(on ? 'enter' : 'leave')); } });
   }
 
   addEventListener('keydown', (e) => {
@@ -48,4 +49,6 @@
   next.addEventListener('click', () => go(i + 1));
   addEventListener('hashchange', () => { const k = (parseInt(location.hash.slice(1), 10) || 1) - 1; if (k !== i) go(k); });
   go(i, true);
+  // page scripts register their enter handlers after this file, so replay enter for the opening slide
+  setTimeout(() => slides[i].dispatchEvent(new CustomEvent("enter")), 0);
 })();
