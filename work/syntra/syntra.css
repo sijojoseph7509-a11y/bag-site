@@ -63,3 +63,7 @@
 .sx-lamp.on{opacity:1}
 .bar,.foot{color:#7a4d1c}.bar .mut,.foot .mut{color:#a07a52}.prog{background:rgba(122,77,28,.15)}.prog i{background:#975c1c}
 @media (prefers-reduced-motion:reduce){.sx .stage{transition:none;filter:none;transform:none}.sx-breathe>img,.sx-drift>img,.sx-focus>img,.sx-kenburns>img{animation:none}.sx-flow path{stroke-dashoffset:0}.sx-dots>g,.sx-bars rect{opacity:1;transform:none;animation:none!important}.sx-ticket{clip-path:none;transform:none;animation:none!important}}
+/* the slide's own picture, blurred and stretched, fills the screen around it so the slice runs edge to edge */
+.slide.sx{background-color:var(--t);background-size:100% 100%;background-repeat:no-repeat}
+.slide.sx::before{content:"";position:absolute;inset:0;background:inherit;background-size:cover;background-position:center;filter:blur(28px) saturate(1.05);transform:scale(1.15);z-index:0}
+.slide.sx .stage{z-index:1}
