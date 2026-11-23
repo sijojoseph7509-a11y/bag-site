@@ -3,7 +3,7 @@
   const track = document.querySelector('.track'), slides = [...track.children];
   const bar = document.querySelector('.prog i'), count = document.getElementById('count');
   const prev = document.querySelector('.nav.prev'), next = document.querySelector('.nav.next');
-  const N = slides.length, back = document.body.dataset.back || '../', nextProject = document.body.dataset.next;
+  const N = slides.length, back = document.body.dataset.back || '../', nextProject = document.body.dataset.next, prevProject = document.body.dataset.prev;
   let i = Math.min(N - 1, Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
 
   // load images just ahead of where you are, so the deck opens fast
@@ -11,12 +11,14 @@
 
   function go(k, instant) {
     if (k >= N && nextProject && !instant) { location.href = nextProject; return; }
+    // ← on the first slide goes back to the previous project, landing on its last slide (the bag itself has no slides)
+    if (k < 0 && prevProject && !instant) { location.href = prevProject + (/\.\.\/$/.test(prevProject) && prevProject.split('/').filter(Boolean).every((x) => x === '..') ? '' : '#999'); return; }
     i = Math.max(0, Math.min(N - 1, k));
     if (instant) { track.style.transition = 'none'; requestAnimationFrame(() => track.style.transition = ''); }
     track.style.transform = `translateX(${-i * 100}vw)`;
     bar.style.width = (N > 1 ? i / (N - 1) * 100 : 100) + '%';
     count.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
-    prev.disabled = i === 0; next.disabled = i === N - 1 && !nextProject;
+    prev.disabled = i === 0 && !prevProject; next.disabled = i === N - 1 && !nextProject;
     next.setAttribute('aria-label', i === N - 1 && nextProject ? (nextProject === '../' || nextProject === '../../' ? 'Back to the bag' : 'Next project') : 'Next slide');
     history.replaceState(null, '', '#' + (i + 1));
     warm(i);
