@@ -5,6 +5,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter+Tight:wght@400;500&family=Lato:wght@100;300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../deck.css?v=9">
 <link rel="stylesheet" href="syntra.css">
+<style>
+.slide.syreel{padding:0;background:#F5E8D6;position:relative}
+.syreel video{width:100vw;height:100vh;object-fit:contain;display:block}
+.syreel .rcap{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:14px;align-items:center;font:500 12px/1 "Inter Tight",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7a4d1c;background:rgba(245,232,214,.8);backdrop-filter:blur(8px);padding:8px 8px 8px 16px;border-radius:999px}
+.syreel .rcap button{font:inherit;color:#fff;background:#975c1c;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+</style>
+<script>addEventListener("DOMContentLoaded",()=>{const sl=document.getElementById("syreel"),v=sl.querySelector("video"),b=sl.querySelector("button");let user=false;
+const play=()=>{if(!user)v.play().catch(()=>{});b.textContent=v.paused?"Play":"Pause"};
+sl.addEventListener("enter",()=>{v.currentTime=0;play()});sl.addEventListener("leave",()=>{v.pause()});
+v.addEventListener("play",()=>b.textContent="Pause");v.addEventListener("pause",()=>b.textContent="Play");
+b.addEventListener("click",()=>{if(v.paused){user=false;v.play()}else{user=true;v.pause()}});
+if(sl.classList.contains("on"))play();});</script>
 </head><body data-back="../../" data-prev="../../cubby/" data-next="../../nobroker/">
 <header class="bar small"><a href="../../">← Back to the bag</a><span class="mut">Retail Tech · Syntra</span></header>
 <main class="deck"><div class="track">
@@ -28,6 +40,7 @@
 <section class="slide sx" data-page="06" data-x="140" data-y="122" data-w="1159" data-h="875" style="--t:#fefdfc;--b:#fefdfb;--l:#f2e5d0;--r:#fefefe;--w:1159;--h:875" data-bg="q/b17.webp?v=2"><div class="stage"><img class="base" data-src="q/s17.webp?v=2" data-srcset="q/s17.webp?v=2 1x, q/s17@2x.webp?v=2 2x" alt="Syntra, slide 17"></div></section>
 <section class="slide sx" data-page="06" data-x="144" data-y="1152" data-w="1152" data-h="665" style="--t:#fefbf8;--b:#fdf9f3;--l:#fefdfb;--r:#feebd8;--w:1152;--h:665" data-bg="q/b18.webp?v=2"><div class="stage"><img class="base" data-src="q/s18.webp?v=2" data-srcset="q/s18.webp?v=2 1x, q/s18@2x.webp?v=2 2x" alt="Syntra, slide 18"></div></section>
 <section class="slide sx" data-page="06" data-x="216" data-y="1992" data-w="1007" data-h="167" style="--t:#faf6ef;--b:#fbf7f1;--l:#f2e5d0;--r:#ffffff;--w:1007;--h:167" data-bg="q/b19.webp?v=2"><div class="stage"><img class="base" data-src="q/s19.webp?v=2" data-srcset="q/s19.webp?v=2 1x, q/s19@2x.webp?v=2 2x" alt="Syntra, slide 19"></div></section>
+<section class="slide syreel" id="syreel" style="--bg:#F5E8D6"><video muted loop playsinline preload="auto" poster="fx/reel-poster.webp"><source src="fx/reel.mp4" type="video/mp4"></video><p class="rcap"><span>Syntra in 20 seconds</span><button type="button" aria-label="Pause">Pause</button></p></section>
 <section class="slide sx" data-page="k-persona" data-x="155" data-y="120" data-w="1130" data-h="782" style="--t:#fcf9f5;--b:#fefdfc;--l:#fefefe;--r:#f1e3cc;--w:1130;--h:782" data-bg="q/b20.webp?v=2"><div class="stage"><img class="base" data-src="q/s20.webp?v=2" data-srcset="q/s20.webp?v=2 1x, q/s20@2x.webp?v=2 2x" alt="Syntra, slide 20"></div></section>
 <section class="slide sx" data-page="k-business" data-x="155" data-y="121" data-w="1129" data-h="523" style="--t:#fefdfc;--b:#f8f2e8;--l:#f1e3cc;--r:#ffffff;--w:1129;--h:523" data-bg="q/b21.webp?v=2"><div class="stage"><img class="base" data-src="q/s21.webp?v=2" data-srcset="q/s21.webp?v=2 1x, q/s21@2x.webp?v=2 2x" alt="Syntra, slide 21"></div></section>
 <section class="slide sx" data-page="k-business" data-x="155" data-y="649" data-w="1129" data-h="458" style="--t:#f9f2e9;--b:#fefdfb;--l:#f6edde;--r:#fefdfb;--w:1129;--h:458" data-bg="q/b22.webp?v=2"><div class="stage"><img class="base" data-src="q/s22.webp?v=2" data-srcset="q/s22.webp?v=2 1x, q/s22@2x.webp?v=2 2x" alt="Syntra, slide 22"></div></section>
