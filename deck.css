@@ -74,3 +74,7 @@ body.ui-top .bar,body.ui-bottom .foot,.bar:focus-within,.foot:focus-within{opaci
 @media (max-width:800px){.learn .cols,.learn .cols.two{grid-template-columns:1fr}}
 /* fill the whole window; crop only a sliver when the picture's shape is close to the screen's */
 .slide>img.cover{width:100vw;height:100vh;max-width:none;max-height:none;object-fit:cover}
+/* side arrows: invisible until the pointer is over the arrow itself */
+.nav{opacity:0!important;transition:opacity .25s}
+.nav:hover,.nav:focus-visible{opacity:1!important}
+@media (hover:none){.nav{opacity:.85!important}}
