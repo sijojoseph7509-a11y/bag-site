@@ -54,7 +54,11 @@
   document.addEventListener('mouseleave', () => document.body.classList.remove('ui-top', 'ui-bottom'));
   addEventListener('touchstart', () => { document.body.classList.add('ui-top', 'ui-bottom'); clearTimeout(uiT); uiT = setTimeout(() => document.body.classList.remove('ui-top', 'ui-bottom'), 2500); }, { passive: true });
   // each picture slide takes the colour of its own picture's edge, so it runs edge to edge with no bars
-  const edge = (im) => { try { const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d'); g.drawImage(im, 0, 0, im.naturalWidth, Math.max(1, im.naturalHeight * .02), 0, 0, 8, 1); g.drawImage(im, 0, im.naturalHeight * .98, im.naturalWidth, im.naturalHeight * .02, 0, 1, 8, 1); const d = g.getImageData(0, 0, 8, 2).data; let r = 0, gg = 0, b = 0; for (let k = 0; k < d.length; k += 4) { r += d[k]; gg += d[k + 1]; b += d[k + 2]; } const n = d.length / 4; im.parentElement.style.background = `rgb(${r / n | 0},${gg / n | 0},${b / n | 0})`; } catch (_) {} };
+  const edge = (im) => { try { const c = document.createElement('canvas'); c.width = c.height = 2; const g = c.getContext('2d'), w = im.naturalWidth, h = im.naturalHeight, s = Math.max(2, Math.round(Math.min(w, h) * .01));
+    // colour of the picture's own margin: its four corners (a row average would mix in the photo and turn grey)
+    [[0, 0], [w - s, 0], [0, h - s], [w - s, h - s]].forEach(([x, y], k) => g.drawImage(im, x, y, s, s, k % 2, k >> 1, 1, 1));
+    const d = g.getImageData(0, 0, 2, 2).data; let r = 0, gg = 0, b = 0; for (let k = 0; k < 16; k += 4) { r += d[k]; gg += d[k + 1]; b += d[k + 2]; }
+    im.parentElement.style.background = `rgb(${r / 4 | 0},${gg / 4 | 0},${b / 4 | 0})`; } catch (_) {} };
   const fit = (im) => { if (!im.naturalWidth) return; const r = im.naturalWidth / im.naturalHeight, s = innerWidth / innerHeight; im.classList.toggle('cover', Math.abs(r - s) / Math.max(r, s) < .13); };
   const ready = (im) => { edge(im); fit(im); };
   const pics = slides.map((sl) => sl.querySelector(':scope > img:not(.obj)')).filter(Boolean);
