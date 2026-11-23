@@ -52,9 +52,9 @@
 
   // full screen: show the top bar or the progress line only while the pointer is near it (a touch shows both briefly)
   let uiT;
-  addEventListener('mousemove', (e) => { document.body.classList.toggle('ui-top', e.clientY < 90); document.body.classList.toggle('ui-bottom', e.clientY > innerHeight - 90); });
+  addEventListener('mousemove', (e) => { document.body.classList.toggle('ui-top', e.clientY < 90);  });
   document.addEventListener('mouseleave', () => document.body.classList.remove('ui-top', 'ui-bottom'));
-  addEventListener('touchstart', () => { document.body.classList.add('ui-top', 'ui-bottom'); clearTimeout(uiT); uiT = setTimeout(() => document.body.classList.remove('ui-top', 'ui-bottom'), 2500); }, { passive: true });
+  addEventListener('touchstart', () => { document.body.classList.add('ui-top'); clearTimeout(uiT); uiT = setTimeout(() => document.body.classList.remove('ui-top'), 2500); }, { passive: true });
   // each picture slide takes the colour of its own picture's edge, so it runs edge to edge with no bars
   const edge = (im) => { try { const c = document.createElement('canvas'); c.width = c.height = 2; const g = c.getContext('2d'), w = im.naturalWidth, h = im.naturalHeight, s = Math.max(2, Math.round(Math.min(w, h) * .01));
     // colour of the picture's own margin: its four corners (a row average would mix in the photo and turn grey)

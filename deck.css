@@ -81,3 +81,7 @@ body.ui-top .bar,body.ui-bottom .foot,.bar:focus-within,.foot:focus-within{opaci
 .key .kl{list-style:none;counter-reset:k;display:grid;gap:12px;max-width:52ch}
 .key .kl li{counter-increment:k;display:grid;grid-template-columns:28px 1fr;font-family:"Cormorant Garamond",serif;font-size:clamp(19px,1.75vw,26px);line-height:1.2;color:var(--ink)}
 .key .kl li::before{content:"0" counter(k);font:500 11px/2.2 "Inter Tight",sans-serif;letter-spacing:.08em;color:var(--acc,#111)}
+
+/* the progress line shows only while the pointer is right on it, so it never covers captions */
+.foot{bottom:0;padding:14px 0 22px;opacity:0!important}
+.foot:hover,.foot:focus-within{opacity:1!important}
