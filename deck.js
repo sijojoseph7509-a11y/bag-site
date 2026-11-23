@@ -57,7 +57,7 @@
   const edge = (im) => { try { const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d'); g.drawImage(im, 0, 0, im.naturalWidth, Math.max(1, im.naturalHeight * .02), 0, 0, 8, 1); g.drawImage(im, 0, im.naturalHeight * .98, im.naturalWidth, im.naturalHeight * .02, 0, 1, 8, 1); const d = g.getImageData(0, 0, 8, 2).data; let r = 0, gg = 0, b = 0; for (let k = 0; k < d.length; k += 4) { r += d[k]; gg += d[k + 1]; b += d[k + 2]; } const n = d.length / 4; im.parentElement.style.background = `rgb(${r / n | 0},${gg / n | 0},${b / n | 0})`; } catch (_) {} };
   const fit = (im) => { if (!im.naturalWidth) return; const r = im.naturalWidth / im.naturalHeight, s = innerWidth / innerHeight; im.classList.toggle('cover', Math.abs(r - s) / Math.max(r, s) < .13); };
   const ready = (im) => { edge(im); fit(im); };
-  const pics = slides.map((sl) => sl.querySelector(':scope > img')).filter(Boolean);
+  const pics = slides.map((sl) => sl.querySelector(':scope > img:not(.obj)')).filter(Boolean);
   pics.forEach((im) => { if (im.complete && im.naturalWidth) ready(im); else im.addEventListener('load', () => ready(im), { once: true }); });
   addEventListener('resize', () => pics.forEach(fit));
 
