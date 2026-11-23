@@ -101,8 +101,8 @@
 
     <img class="bagimg bagback" id="bagback" src="bag.webp" alt="">
     <img class="bagimg bagfront" id="bagfront" src="bag.webp" alt="Blue everyday carry pouch: Cubby, Design Project 02">
-    <a class="baghit" id="baghit" href="javascript:void 0" aria-label="Cubby, the main project"></a>
-    <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02<span class="dk"> · case study coming soon · hover to look inside</span></span></div>
+    <a class="baghit" id="baghit" href="cubby/" aria-label="Cubby, the main project"></a>
+    <div class="baglabel small" id="baglabel"><b>Cubby</b> <span class="mut">· Design Project 02<span class="dk"> · open the case study</span></span></div>
     <div id="items"></div>
 
     <section class="contact small" id="contact">
@@ -135,7 +135,7 @@ const ITEMS = [
 ];
 const ASP={pendrive:532/900,notebook:497/569,frame:996/359,pen:900/851,pencil:900/754,charger:847/900,lipbalm:193/900};
 const REAL={pendrive:[13,0.775,0.531,0],notebook:[19.5,0.3,0.575,-2],frame:[14.5,0.612,0.449,0],pen:[14,0.599,0.658,-45],pencil:[17.5,0.595,0.726,40],charger:[10.5,0.59,0.559,-4],lipbalm:[7,0.819,0.698,0]};
-const IDX=[['Design Project 02','Cubby',''],['Retail Technology','Syntra','work/syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
+const IDX=[['Design Project 02','Cubby','cubby/'],['Retail Technology','Syntra','work/syntra/'],['Design Management','No-Broker','nobroker/'],['SLA III','Visual Narratives','sla3/'],['Retail Systems','Ather Energy','ather/'],['Intro to Materials','Coming soon',''],['Ergonomics','Coming soon','']];
 const $=id=>document.getElementById(id);
 $('index').innerHTML=IDX.map(([a,b,l],i)=>`<a ${l?`href="${l}"${/^http/.test(l)?' target="_blank"':''}`:''} class="${i?'':'main'}"><dt>${a}</dt><dd>${b.toUpperCase()}</dd></a>`).join('');
 
