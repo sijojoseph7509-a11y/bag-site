@@ -61,6 +61,22 @@
   pics.forEach((im) => { if (im.complete && im.naturalWidth) ready(im); else im.addEventListener('load', () => ready(im), { once: true }); });
   addEventListener('resize', () => pics.forEach(fit));
 
+
+  // ── speed: load every slide in the background (nearest first) and decode it before it is shown ──
+  const fire = (im) => { if (im.dataset.src) { if (im.dataset.srcset) im.srcset = im.dataset.srcset; im.src = im.dataset.src; im.removeAttribute('data-src'); } return im.decode ? im.decode().catch(() => {}) : Promise.resolve(); };
+  const prep = (sl) => Promise.all([...sl.querySelectorAll('img')].map(fire));
+  let queued = false;
+  const preloadAll = () => {
+    if (queued) return; queued = true;
+    const order = slides.map((sl, k) => [Math.abs(k - i) + (k < i ? .5 : 0), sl]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
+    let n = 0; const next = () => { const sl = order[n++]; if (!sl) return; prep(sl).then(next); };
+    for (let c = 0; c < 4; c++) next();
+  };
+  if (document.readyState === 'complete') setTimeout(preloadAll, 300); else addEventListener('load', () => setTimeout(preloadAll, 300));
+  setTimeout(preloadAll, 2500);
+  // keep every slide in an offline cache, so a project that was opened once opens instantly afterwards
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('sw.js', document.querySelector('script[src*="deck.js"]').src).href).catch(() => {});
+
   prev.addEventListener('click', () => go(i - 1));
   next.addEventListener('click', () => go(i + 1));
   addEventListener('hashchange', () => { const k = (parseInt(location.hash.slice(1), 10) || 1) - 1; if (k !== i) go(k); });

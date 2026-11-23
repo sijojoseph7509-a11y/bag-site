@@ -260,5 +260,20 @@ addEventListener('resize',layout);
 layout();tick();
 document.querySelectorAll('.item img').forEach(im=>im.complete||im.addEventListener('load',layout));
 </script>
+<script>
+// warm the projects: offline cache on, then quietly fetch the opening slides of every project (and the Cubby 3D model)
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+addEventListener('load', () => setTimeout(async () => {
+  const hi = devicePixelRatio > 1, P = ['cubby/', 'work/syntra/', 'nobroker/', 'sla3/', 'ather/', 'ergonomics/'];
+  for (const p of P) { try {
+    const t = await (await fetch(p)).text(); const out = [];
+    for (const m of t.matchAll(/data-src="([^"]+)"(?:\s+data-srcset="([^"]+)")?/g)) {
+      let u = m[1]; if (hi && m[2]) { const two = m[2].split(',').map((x) => x.trim().split(' ')[0]).pop(); if (two) u = two; }
+      out.push(p + u); if (out.length >= 6) break; }
+    if (p === 'cubby/') out.push(p + (t.match(/src="(3d\/[^"]+)"/) || [, ''])[1]);
+    await Promise.all(out.filter((u) => !u.endsWith('/')).map((u) => fetch(u).catch(() => {})));
+  } catch (_) {} }
+}, 1500));
+</script>
 </body>
 </html>
