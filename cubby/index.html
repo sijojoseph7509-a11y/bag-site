@@ -4,6 +4,29 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../deck.css?v=7">
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+.slide.bay3d{background:radial-gradient(120% 90% at 50% 60%,#121412 0,#0B0B0C 60%);flex-direction:column;justify-content:flex-start;position:relative;overflow:hidden}
+.b3-head{position:relative;z-index:2;text-align:center;padding-top:clamp(40px,7vh,84px);pointer-events:none}
+.b3-eye{font:600 13px/1 "DM Sans",sans-serif;letter-spacing:.24em;color:#CCFF00}
+.bay3d h2{font:600 clamp(40px,4.6vw,72px)/1.1 Sora,sans-serif;color:#fff;margin:14px 0 12px;letter-spacing:-.01em}
+.b3-sub{font:400 clamp(14px,1.2vw,19px)/1.4 "DM Sans",sans-serif;color:#9A9AA0}
+.bay3d model-viewer{position:absolute;inset:0;width:100%;height:100%;--poster-color:transparent;background:transparent;cursor:grab}
+.bay3d model-viewer:active{cursor:grabbing}
+.b3-glow{position:absolute;left:50%;bottom:6%;width:62vw;height:16vh;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(204,255,0,.32),rgba(204,255,0,.08) 60%,transparent);filter:blur(18px);animation:b3float 6s ease-in-out infinite;pointer-events:none}
+.bay3d model-viewer{animation:b3bob 6s ease-in-out infinite}
+@keyframes b3bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.4vh)}}
+@keyframes b3float{0%,100%{opacity:.85;width:62vw}50%{opacity:.6;width:56vw}}
+.b3-hint{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:2;font:600 11px/1 "DM Sans",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);padding:9px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;pointer-events:none;transition:opacity .6s}
+.bay3d.used .b3-hint{opacity:0}
+</style>
+<script>
+addEventListener("DOMContentLoaded",()=>{const sl=document.getElementById("bay3d"),mv=document.getElementById("bay");
+["touchstart","touchend"].forEach(ev=>mv.addEventListener(ev,e=>e.stopPropagation(),{passive:true}));
+mv.addEventListener("camera-change",e=>{if(e.detail.source==="user-interaction")sl.classList.add("used")});
+sl.addEventListener("enter",()=>{mv.dismissPoster&&mv.dismissPoster()});});
+</script>
 </head><body data-back="../" data-next="../work/syntra/">
 <header class="bar small"><a href="../">← Back to the bag</a><span class="mut">Design Project 02 · Cubby</span></header>
 <main class="deck"><div class="track">
@@ -59,7 +82,10 @@
 <section class="slide"><img data-src="c49.webp?v=3" data-srcset="c49.webp?v=3 1440w, c49@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 49"></section>
 <section class="slide"><img data-src="c50.webp?v=3" data-srcset="c50.webp?v=3 1440w, c50@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 50"></section>
 <section class="slide"><img data-src="c51.webp?v=3" data-srcset="c51.webp?v=3 1440w, c51@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 51"></section>
-<section class="slide"><img data-src="c52.webp?v=3" data-srcset="c52.webp?v=3 1440w, c52@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 52"></section>
+<section class="slide bay3d" id="bay3d"><div class="b3-head"><p class="b3-eye">THE FINAL OUTPUT</p><h2>Cubby Bay</h2><p class="b3-sub">152 Cubbies · 3 rows · 1 m aisle · rider care · staff station · 6.0 × 3.65 × 2.3 m</p></div>
+<div class="b3-glow"></div>
+<model-viewer id="bay" src="3d/cubby_bay.glb" alt="Interactive 3D model of the Cubby Bay: 152 Cubbies in three rows around a 1 m aisle" camera-controls disable-zoom disable-pan auto-rotate auto-rotate-delay="2500" rotation-per-second="14deg" interaction-prompt="none" camera-orbit="-38deg 68deg auto" field-of-view="26deg" exposure="1.15" shadow-intensity="0.6" shadow-softness="1" environment-image="neutral" tone-mapping="aces" loading="lazy" reveal="auto"></model-viewer>
+<p class="b3-hint">Drag to rotate</p></section>
 <section class="slide"><img data-src="c53.webp?v=3" data-srcset="c53.webp?v=3 1440w, c53@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 53"></section>
 <section class="slide"><img data-src="c54.webp?v=3" data-srcset="c54.webp?v=3 1440w, c54@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 54"></section>
 <section class="slide"><img data-src="c55.webp?v=3" data-srcset="c55.webp?v=3 1440w, c55@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 55"></section>
