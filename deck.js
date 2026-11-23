@@ -63,14 +63,18 @@
 
 
   // ── speed: load every slide in the background (nearest first) and decode it before it is shown ──
-  const fire = (im) => { if (im.dataset.src) { if (im.dataset.srcset) im.srcset = im.dataset.srcset; im.src = im.dataset.src; im.removeAttribute('data-src'); } return im.decode ? im.decode().catch(() => {}) : Promise.resolve(); };
+  const fire = (im) => {
+    if (im.dataset.src) { if (im.dataset.srcset) im.srcset = im.dataset.srcset; im.src = im.dataset.src; im.removeAttribute('data-src'); }
+    const loaded = (im.complete && im.naturalWidth) ? Promise.resolve() : new Promise((r) => { im.addEventListener('load', r, { once: true }); im.addEventListener('error', r, { once: true }); setTimeout(r, 15000); });
+    return loaded.then(() => Promise.race([im.decode ? im.decode().catch(() => {}) : 0, new Promise((r) => setTimeout(r, 400))]));
+  };
   const prep = (sl) => Promise.all([...sl.querySelectorAll('img')].map(fire));
   let queued = false;
   const preloadAll = () => {
     if (queued) return; queued = true;
     const order = slides.map((sl, k) => [Math.abs(k - i) + (k < i ? .5 : 0), sl]).sort((a, b) => a[0] - b[0]).map((x) => x[1]);
     let n = 0; const next = () => { const sl = order[n++]; if (!sl) return; prep(sl).then(next); };
-    for (let c = 0; c < 4; c++) next();
+    for (let c = 0; c < 6; c++) next();
   };
   if (document.readyState === 'complete') setTimeout(preloadAll, 300); else addEventListener('load', () => setTimeout(preloadAll, 300));
   setTimeout(preloadAll, 2500);
