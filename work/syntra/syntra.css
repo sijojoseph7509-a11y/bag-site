@@ -1,7 +1,7 @@
 /* Syntra deck: every slide is a slice of the Figma documentation, filling the screen; the moving parts come back as live layers. */
 .slide.sx{padding:0;position:relative;overflow:hidden;
   background:linear-gradient(90deg,var(--l) 0,transparent 22%,transparent 78%,var(--r) 100%),linear-gradient(var(--t),var(--b))}
-.sx .stage{position:relative;flex:none;width:min(100vw,calc((100vh - 104px) * var(--w) / var(--h)),calc(var(--w) * 1.25px));aspect-ratio:var(--w)/var(--h);margin-top:4px;
+.sx .stage{position:relative;flex:none;width:min(100vw,calc(100vh * var(--w) / var(--h)),calc(var(--w) * 1.25px));aspect-ratio:var(--w)/var(--h);margin-top:0;
   overflow:hidden;isolation:isolate;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 1.6%,#000 98.4%,transparent),linear-gradient(transparent,#000 2.2%,#000 97.8%,transparent);
   -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 1.6%,#000 98.4%,transparent),linear-gradient(transparent,#000 2.2%,#000 97.8%,transparent);mask-composite:intersect;
