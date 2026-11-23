@@ -58,7 +58,8 @@
     // colour of the picture's own margin: its four corners (a row average would mix in the photo and turn grey)
     [[0, 0], [w - s, 0], [0, h - s], [w - s, h - s]].forEach(([x, y], k) => g.drawImage(im, x, y, s, s, k % 2, k >> 1, 1, 1));
     const d = g.getImageData(0, 0, 2, 2).data; let r = 0, gg = 0, b = 0; for (let k = 0; k < 16; k += 4) { r += d[k]; gg += d[k + 1]; b += d[k + 2]; }
-    im.parentElement.style.background = `rgb(${r / 4 | 0},${gg / 4 | 0},${b / 4 | 0})`; } catch (_) {} };
+    r /= 4; gg /= 4; b /= 4; if (Math.min(r, gg, b) > 226) r = gg = b = 255;   // a white margin stays pure white
+    if (!im.parentElement.dataset.bg) im.parentElement.style.background = `rgb(${r | 0},${gg | 0},${b | 0})`; } catch (_) {} };
   const fit = (im) => { if (!im.naturalWidth) return; const r = im.naturalWidth / im.naturalHeight, s = innerWidth / innerHeight; im.classList.toggle('cover', Math.abs(r - s) / Math.max(r, s) < .13); };
   const ready = (im) => { edge(im); fit(im); };
   const pics = slides.map((sl) => sl.querySelector(':scope > img:not(.obj)')).filter(Boolean);
