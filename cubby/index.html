@@ -3,7 +3,7 @@
 <title>Cubby · Sijo Joseph</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../deck.css?v=7">
+<link rel="stylesheet" href="../deck.css?v=8">
 <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -22,10 +22,9 @@
 .bay3d.used .b3-hint{opacity:0}
 </style>
 <script>
-addEventListener("DOMContentLoaded",()=>{const sl=document.getElementById("bay3d"),mv=document.getElementById("bay");
+addEventListener("DOMContentLoaded",()=>{document.querySelectorAll(".bay3d").forEach(sl=>{const mv=sl.querySelector("model-viewer");
 ["touchstart","touchend"].forEach(ev=>mv.addEventListener(ev,e=>e.stopPropagation(),{passive:true}));
-mv.addEventListener("camera-change",e=>{if(e.detail.source==="user-interaction")sl.classList.add("used")});
-sl.addEventListener("enter",()=>{mv.dismissPoster&&mv.dismissPoster()});});
+mv.addEventListener("camera-change",e=>{if(e.detail.source==="user-interaction")sl.classList.add("used")});});});
 </script>
 </head><body data-back="../" data-next="../work/syntra/">
 <header class="bar small"><a href="../">← Back to the bag</a><span class="mut">Design Project 02 · Cubby</span></header>
@@ -85,7 +84,7 @@ sl.addEventListener("enter",()=>{mv.dismissPoster&&mv.dismissPoster()});});
 <section class="slide bay3d" id="bay3d"><div class="b3-head"><p class="b3-eye">THE FINAL OUTPUT</p><h2>Cubby Bay</h2><p class="b3-sub">152 Cubbies · 3 rows · 1 m aisle · rider care · staff station · 6.0 × 3.65 × 2.3 m</p></div>
 <div class="b3-glow"></div>
 <model-viewer id="bay" src="3d/cubby_bay.glb?v=4" alt="Interactive 3D model of the Cubby Bay: 152 Cubbies in three rows around a 1 m aisle" camera-controls disable-zoom disable-pan auto-rotate auto-rotate-delay="2500" rotation-per-second="14deg" interaction-prompt="none" camera-orbit="-38deg 68deg auto" field-of-view="26deg" exposure="1" shadow-intensity="0.6" shadow-softness="1" environment-image="neutral" tone-mapping="aces" loading="eager" reveal="auto"></model-viewer>
-<p class="b3-hint">Drag to rotate</p></section>
+<p class="b3-hint">Drag to rotate 360°</p></section>
 <section class="slide"><img data-src="c53.webp?v=3" data-srcset="c53.webp?v=3 1440w, c53@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 53"></section>
 <section class="slide"><img data-src="c54.webp?v=3" data-srcset="c54.webp?v=3 1440w, c54@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 54"></section>
 <section class="slide"><img data-src="c55.webp?v=3" data-srcset="c55.webp?v=3 1440w, c55@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 55"></section>
@@ -96,7 +95,7 @@ sl.addEventListener("enter",()=>{mv.dismissPoster&&mv.dismissPoster()});});
 <section class="slide"><img data-src="c60.webp?v=3" data-srcset="c60.webp?v=3 1440w, c60@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 60"></section>
 <section class="slide"><img data-src="c61.webp?v=3" data-srcset="c61.webp?v=3 1440w, c61@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 61"></section>
 <section class="slide"><img data-src="c62.webp?v=3" data-srcset="c62.webp?v=3 1440w, c62@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 62"></section>
-<section class="slide"><img data-src="c63.webp?v=3" data-srcset="c63.webp?v=3 1440w, c63@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 63"></section>
+<section class="slide"><img data-src="c63.webp?v=4" data-srcset="c63.webp?v=4 1440w, c63@2x.webp?v=4 2880w" sizes="100vw" alt="Cubby slide 63"></section>
 <section class="slide"><img data-src="c64.webp?v=3" data-srcset="c64.webp?v=3 1440w, c64@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 64"></section>
 <section class="slide"><img data-src="c65.webp?v=3" data-srcset="c65.webp?v=3 1440w, c65@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 65"></section>
 <section class="slide"><img data-src="c66.webp?v=3" data-srcset="c66.webp?v=3 1440w, c66@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 66"></section>
@@ -112,7 +111,10 @@ sl.addEventListener("enter",()=>{mv.dismissPoster&&mv.dismissPoster()});});
 <section class="slide"><img data-src="c76.webp?v=3" data-srcset="c76.webp?v=3 1440w, c76@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 76"></section>
 <section class="slide"><img data-src="c77.webp?v=3" data-srcset="c77.webp?v=3 1440w, c77@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 77"></section>
 <section class="slide"><img data-src="c78.webp?v=3" data-srcset="c78.webp?v=3 1440w, c78@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 78"></section>
-<section class="slide"><img data-src="c79.webp?v=3" data-srcset="c79.webp?v=3 1440w, c79@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 79"></section>
+<section class="slide bay3d" id="bay3d2"><div class="b3-head"><p class="b3-eye">BRAND IN PLACE · AFTER DARK</p><h2>Lime is only ever light</h2><p class="b3-sub">At night the bay is the brightest, safest corner of the basement.</p></div>
+<div class="b3-glow"></div>
+<model-viewer id="bay2" src="3d/cubby_bay.glb?v=4" alt="Interactive 3D model of the Cubby Bay: 152 Cubbies in three rows around a 1 m aisle" camera-controls disable-zoom disable-pan auto-rotate rotation-per-second="14deg" interaction-prompt="none" camera-orbit="-38deg 68deg auto" auto-rotate-delay="0" field-of-view="26deg" exposure="0.6" shadow-intensity="0.6" shadow-softness="1" environment-image="neutral" tone-mapping="aces" loading="eager" reveal="auto"></model-viewer>
+<p class="b3-hint">Drag to rotate 360°</p></section>
 <section class="slide"><img data-src="c80.webp?v=3" data-srcset="c80.webp?v=3 1440w, c80@2x.webp?v=3 2880w" sizes="100vw" alt="Cubby slide 80"></section>
 <section class="slide learn" style="--acc:#CCFF00"><div class="lk"><p class="eyebrow">My learnings · Cubby</p><h2>If I started again…</h2><div class="cols two"><div><h3>Learned</h3><ul><li>Measure first. My first box was guessed, and wrong.</li><li>Count, don’t just observe: log n for every interview.</li><li>Prototype the lock earlier; it changed the band, the bay and the height.</li><li>Design for the basement: no signal, low light, dust.</li></ul></div><div><h3>Next</h3><ol><li>Bench-test the Tronic lock; set the keeper hole.</li><li>Measure 10–15 more helmets with photo proof.</li><li>8–12 structured interviews and a 2-hour helmet count.</li><li>Apply the 0.045 m band to Bay Primary and Foyer.</li><li>Supplier quotes on the same drawings.</li></ol></div></div><a class="next" href="../work/syntra/">Next project: Syntra →</a></div></section>
 </div></main>

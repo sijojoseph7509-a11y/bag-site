@@ -78,3 +78,6 @@ body.ui-top .bar,body.ui-bottom .foot,.bar:focus-within,.foot:focus-within{opaci
 .nav{opacity:0!important;transition:opacity .25s}
 .nav:hover,.nav:focus-visible{opacity:1!important}
 @media (hover:none){.nav{opacity:.85!important}}
+.key .kl{list-style:none;counter-reset:k;display:grid;gap:12px;max-width:52ch}
+.key .kl li{counter-increment:k;display:grid;grid-template-columns:28px 1fr;font-family:"Cormorant Garamond",serif;font-size:clamp(19px,1.75vw,26px);line-height:1.2;color:var(--ink)}
+.key .kl li::before{content:"0" counter(k);font:500 11px/2.2 "Inter Tight",sans-serif;letter-spacing:.08em;color:var(--acc,#111)}
